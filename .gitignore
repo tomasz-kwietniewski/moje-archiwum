@@ -1,0 +1,13 @@
+node_modules/
+dist/
+.test-output/
+.playwright-profile/
+AGENTS.override.md
+*.log
+release/
+native/*.exe
+native/host.json
+android/.gradle/
+android/build/
+android/app/build/
+android/local.properties

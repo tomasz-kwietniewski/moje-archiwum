@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="AppTheme" parent="android:style/Theme.Material.Light.NoActionBar">
+        <item name="android:fontFamily">sans</item>
+        <item name="android:colorAccent">@color/archive_forest</item>
+        <item name="android:statusBarColor">@color/archive_background</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:navigationBarColor">@color/archive_background</item>
+        <item name="android:windowLightNavigationBar">true</item>
+        <item name="android:windowBackground">@color/archive_background</item>
+    </style>
+
+    <style name="ArchiveEyebrow">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:letterSpacing">0.16</item>
+        <item name="android:textColor">@color/archive_muted</item>
+        <item name="android:textSize">10sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="ArchiveFieldLabel">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginBottom">7dp</item>
+        <item name="android:textColor">@color/archive_ink</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="ArchiveInput" parent="android:Widget.Material.EditText">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@drawable/archive_field</item>
+        <item name="android:fontFamily">sans</item>
+        <item name="android:minHeight">48dp</item>
+        <item name="android:paddingStart">13dp</item>
+        <item name="android:paddingEnd">13dp</item>
+        <item name="android:textColor">@color/archive_ink</item>
+        <item name="android:textColorHint">@color/archive_muted</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="ArchivePrimaryButton" parent="android:Widget.Material.Button">
+        <item name="android:layout_height">52dp</item>
+        <item name="android:background">@drawable/archive_primary_button</item>
+        <item name="android:fontFamily">sans</item>
+        <item name="android:stateListAnimator">@null</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="ArchiveSecondaryButton" parent="android:Widget.Material.Button">
+        <item name="android:layout_height">48dp</item>
+        <item name="android:background">@drawable/archive_secondary_button</item>
+        <item name="android:fontFamily">sans</item>
+        <item name="android:minWidth">118dp</item>
+        <item name="android:paddingStart">15dp</item>
+        <item name="android:paddingEnd">15dp</item>
+        <item name="android:stateListAnimator">@null</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textColor">@color/archive_forest</item>
+        <item name="android:textSize">13sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+</resources>

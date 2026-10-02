@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="archive_background">#F5F3EC</color>
+    <color name="archive_ink">#242E29</color>
+    <color name="archive_forest">#24533E</color>
+    <color name="archive_forest_pressed">#193F2E</color>
+    <color name="archive_sage">#E8ECDF</color>
+    <color name="archive_sage_pressed">#DCE4D2</color>
+    <color name="archive_sage_border">#D6DECB</color>
+    <color name="archive_field_background">#FFFEF9</color>
+    <color name="archive_field_border">#BBC4B7</color>
+    <color name="archive_muted">#526354</color>
+    <color name="archive_rule">#D7DACF</color>
+</resources>

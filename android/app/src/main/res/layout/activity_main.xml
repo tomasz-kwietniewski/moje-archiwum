@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/archive_background"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:id="@+id/root"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingStart="24dp"
+        android:paddingTop="24dp"
+        android:paddingEnd="24dp"
+        android:paddingBottom="32dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:background="@drawable/archive_mark"
+                android:fontFamily="serif"
+                android:gravity="center"
+                android:includeFontPadding="false"
+                android:singleLine="true"
+                android:text="md"
+                android:textColor="@android:color/white"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="11dp"
+                android:layout_marginEnd="8dp"
+                android:layout_weight="1"
+                android:ellipsize="end"
+                android:letterSpacing="0.17"
+                android:singleLine="true"
+                android:text="MOJE ARCHIWUM"
+                android:textColor="@color/archive_ink"
+                android:textSize="10sp"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <View
+                    android:layout_width="6dp"
+                    android:layout_height="6dp"
+                    android:background="@drawable/archive_status_dot" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="6dp"
+                    android:text="Zapis lokalny"
+                    android:textColor="@color/archive_muted"
+                    android:textSize="11sp" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/close"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:layout_marginStart="6dp"
+                android:layout_marginEnd="-10dp"
+                android:background="?android:attr/selectableItemBackgroundBorderless"
+                android:contentDescription="Zamknij i wróć do przeglądarki"
+                android:gravity="center"
+                android:includeFontPadding="false"
+                android:text="×"
+                android:textColor="@color/archive_ink"
+                android:textSize="26sp" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="20dp"
+            android:background="@color/archive_rule" />
+
+        <TextView
+            style="@style/ArchiveEyebrow"
+            android:layout_marginTop="27dp"
+            android:text="STRONA, DO KTÓREJ WARTO WRÓCIĆ" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="7dp"
+            android:fontFamily="serif"
+            android:text="Zachowaj na później."
+            android:textColor="@color/archive_ink"
+            android:textSize="33sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="23dp"
+            android:background="@drawable/archive_card"
+            android:orientation="vertical"
+            android:padding="17dp">
+
+            <TextView
+                style="@style/ArchiveEyebrow"
+                android:text="FOLDER ARCHIWUM" />
+
+            <TextView
+                android:id="@+id/folderLabel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:breakStrategy="high_quality"
+                android:text="Wybierz miejsce na notatki"
+                android:textColor="@color/archive_ink"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:text="Notatki trafią do podfolderów tematycznych."
+                android:textColor="@color/archive_muted"
+                android:textSize="11sp" />
+
+            <Button
+                android:id="@+id/chooseFolder"
+                style="@style/ArchiveSecondaryButton"
+                android:layout_width="wrap_content"
+                android:layout_gravity="end"
+                android:layout_marginTop="12dp"
+                android:text="Zmień folder" />
+        </LinearLayout>
+
+        <TextView
+            style="@style/ArchiveFieldLabel"
+            android:layout_marginTop="25dp"
+            android:labelFor="@id/source"
+            android:text="Adres strony" />
+
+        <EditText
+            android:id="@+id/source"
+            style="@style/ArchiveInput"
+            android:hint="https://..."
+            android:inputType="textUri"
+            android:singleLine="true" />
+
+        <Button
+            android:id="@+id/fetch"
+            style="@style/ArchiveSecondaryButton"
+            android:layout_width="match_parent"
+            android:layout_marginTop="9dp"
+            android:text="Pobierz artykuł" />
+
+        <TextView
+            style="@style/ArchiveFieldLabel"
+            android:layout_marginTop="24dp"
+            android:labelFor="@id/title"
+            android:text="Tytuł notatki" />
+
+        <EditText
+            android:id="@+id/title"
+            style="@style/ArchiveInput"
+            android:hint="Tytuł"
+            android:inputType="textCapSentences"
+            android:singleLine="true" />
+
+        <TextView
+            style="@style/ArchiveFieldLabel"
+            android:layout_marginTop="17dp"
+            android:labelFor="@id/topic"
+            android:text="Temat / folder" />
+
+        <AutoCompleteTextView
+            android:id="@+id/topic"
+            style="@style/ArchiveInput"
+            android:completionThreshold="1"
+            android:hint="Zacznij pisać, np. kosz"
+            android:inputType="textCapSentences"
+            android:selectAllOnFocus="true"
+            android:singleLine="true" />
+
+        <TextView
+            style="@style/ArchiveFieldLabel"
+            android:layout_marginTop="23dp"
+            android:labelFor="@id/body"
+            android:text="Treść Markdown" />
+
+        <EditText
+            android:id="@+id/body"
+            style="@style/ArchiveInput"
+            android:layout_height="220dp"
+            android:fontFamily="monospace"
+            android:gravity="top|start"
+            android:hint="Treść artykułu pojawi się tutaj. Możesz ją poprawić."
+            android:inputType="textMultiLine"
+            android:paddingTop="13dp"
+            android:scrollbars="vertical"
+            android:textSize="12sp" />
+
+        <Button
+            android:id="@+id/fullPage"
+            style="@style/ArchiveSecondaryButton"
+            android:layout_width="match_parent"
+            android:layout_marginTop="10dp"
+            android:text="Wstaw całą stronę"
+            android:visibility="gone" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:lineSpacingExtra="2dp"
+            android:text="Obrazy zapiszą się obok notatki i będą dostępne offline. Jeśli któregoś nie da się pobrać, zapytamy, czy zapisać notatkę bez niego. Po zapisie wrócisz do przeglądarki."
+            android:textColor="@color/archive_muted"
+            android:textSize="11sp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="24dp"
+            android:background="@color/archive_rule" />
+
+        <Button
+            android:id="@+id/save"
+            style="@style/ArchivePrimaryButton"
+            android:layout_width="match_parent"
+            android:layout_marginTop="19dp"
+            android:text="Zapisz notatkę" />
+
+        <TextView
+            android:id="@+id/status"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:lineSpacingExtra="2dp"
+            android:textColor="@color/archive_forest"
+            android:textSize="13sp" />
+    </LinearLayout>
+</ScrollView>

@@ -1,0 +1,75 @@
+# Wspólne wektory reguł nazw: src/core.js, native/Program.cs, android NoteFormat/ImageLinks.
+# Kolumny rozdzielone tabulatorem. Ucieczki: \\ \t \n \uXXXX. Linie z # to komentarze.
+# title <wejście> <wynik> | date <ISO UTC> <RRRR-MM-DD Warszawa> | topic-ok <nazwa> | topic-bad <nazwa>
+# fit <długość folderu> <nazwa> <wynik> | images <markdown> <adres>... | images-bad <markdown>
+title	  Zażółć: gęśl / jaźń?  	Zażółć gęśl jaźń
+title	CON	_CON
+title	con.txt	_con.txt
+title	LPT1	_LPT1
+title	...	Bez tytułu
+title		Bez tytułu
+title	A:/B	A B
+title	Tytuł\nz\tpodziałem	Tytuł z podziałem
+title	Nie\u00a0łamliwa\u00a0spacja\u00a0	Nie łamliwa spacja
+title	Ideograficzna\u3000spacja	Ideograficzna spacja
+title	Kropki na końcu. . .	Kropki na końcu
+title	aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa	aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+title	żżżżżżżżżżżżżżżżżżżżżżżżżżżżżżżżżżżżżżżżżżżżżżżżżżżżżżżżżżżżżżżżżżżżżżżżżżżżżżżżżżżżżżżżżżżżżżżżżżżż	żżżżżżżżżżżżżżżżżżżżżżżżżżżżżżżżżżżżżżżżżżżżżżżżżżżżżżżżżżżżżżżżżżżżżżżżżżżżżżżżżżżżżżżżżż
+title	xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.y	xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+title	Emoji 😀 Emoji 😀 Emoji 😀 Emoji 😀 Emoji 😀 Emoji 😀 Emoji 😀 Emoji 😀 Emoji 😀 Emoji 😀 Emoji 😀 Emoji 😀 Emoji 😀 Emoji 😀 Emoji 😀 Emoji 😀 Emoji 😀 Emoji 😀 Emoji 😀 Emoji 😀 Emoji 😀 Emoji 😀 Emoji 😀 Emoji 😀 Emoji 😀 Emoji 😀 Emoji 😀 Emoji 😀 Emoji 😀 Emoji 😀 	Emoji 😀 Emoji 😀 Emoji 😀 Emoji 😀 Emoji 😀 Emoji 😀 Emoji 😀 Emoji 😀 Emoji 😀 Emoji 😀 Emoji 😀 Emoji 😀 Emoji 😀 Emoji 😀 Emoji 😀
+title	é złożone NFD	é złożone NFD
+title	<Tytuł> "w cudzysłowie" | pipe * gwiazdka ?	Tytuł w cudzysłowie pipe gwiazdka
+# Apostrof ASCII psuje synchronizację Synology Drive (klient pomija takie ścieżki, 2026-09-27) - zamiana na \u2019.
+title	Kukiz'15 i 'Wiadomości'	Kukiz\u201915 i \u2019Wiadomości\u2019
+title	'	\u2019
+date	2026-09-23T21:59:59Z	2026-09-23
+date	2026-09-23T22:00:00Z	2026-09-24
+date	2026-03-29T00:30:00Z	2026-03-29
+date	2026-10-25T00:30:00Z	2026-10-25
+date	2026-12-31T23:00:00Z	2027-01-01
+topic-ok	Energetyka
+topic-ok	Zażółć gęślą jaźń
+topic-ok	Do uporządkowania
+topic-ok	aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+topic-ok	Piłka nożna 2026
+topic-ok	con-tekst
+topic-bad	..
+topic-bad	.
+topic-bad	../sekrety
+topic-bad	a/b
+topic-bad	a\\b
+topic-bad	CON
+topic-bad	NUL.txt
+topic-bad	com1
+topic-bad	test.
+topic-bad	test 
+topic-bad	 test
+topic-bad	_resources
+topic-bad	.obsidian
+topic-bad	aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+topic-bad	
+topic-bad	 
+topic-bad	Tab\tw nazwie
+topic-bad	a:b
+topic-bad	Spacja\u00a0
+topic-bad	\u00a0Spacja
+topic-bad	Pytanie?
+fit	55	2026-09-25_Krótki	2026-09-25_Krótki
+fit	150	2026-09-25_Bardzo długi tytuł notatki z Joplina Bardzo długi tytuł notatki z Joplina Bardzo długi tytuł notatki z Joplina Bardzo długi tytuł notatki z Joplina Bardzo długi tytuł notatki z Joplina Bardzo długi tytuł notatki z Joplina 	2026-09-25_Bardzo długi tytuł notatki z Joplina Bardzo długi tytuł notatki z Joplina B
+fit	200	2026-09-25_Bardzo długi tytuł notatki z Joplina Bardzo długi tytuł notatki z Joplina Bardzo długi tytuł notatki z Joplina Bardzo długi tytuł notatki z Joplina Bardzo długi tytuł notatki z Joplina Bardzo długi tytuł notatki z Joplina 	2026-09-25_Bardzo długi tytuł notatk
+fit	100	2026-09-25_😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀	2026-09-25_😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀
+fit	180	2026-09-25_ab. ab. ab. ab. ab. ab. ab. ab. ab. ab. ab. ab. ab. ab. ab. ab. ab. ab. ab. ab. 	2026-09-25_ab. ab. ab. ab. ab. ab. ab. ab. ab. ab. ab. a
+fit-bad	220	2026-09-25_Tytuł
+images	![A](https://example.com/a(1).jpg) [link](https://example.com/page) ![B](https://example.com/b.png) ![A](https://example.com/a(1).jpg)	https://example.com/a(1).jpg	https://example.com/b.png	https://example.com/a(1).jpg
+images	![Opis](https://example.com/photo.jpg "Podpis obrazu")	https://example.com/photo.jpg
+images	![](http://example.com/x.gif 'tytuł')	http://example.com/x.gif
+images	![x](<https://example.com/nawias.png>)	https://example.com/nawias.png
+images	\\![nie](https://example.com/x.png) ![rel](obrazy/x.png) ![data](data:image/png;base64,AAAA)
+images	[![w linku](https://example.com/in-link.png)](https://example.com/strona)	https://example.com/in-link.png
+images	![a [b] c](https://example.com/n.png)\n\n![Drugi](  https://example.com/spacje.webp  )	https://example.com/n.png	https://example.com/spacje.webp
+images	Tekst bez obrazów, ale z ![ niedomkniętym (https://example.com/x.png)
+# Turndown escapuje ( ) < > w adresie obrazu (Eurosport: filters:format(webp)); do pobrania adres bez ukośników.
+images	![x](https://img.example.com/unsafe/filters:format\\(webp\\)/a.jpeg)	https://img.example.com/unsafe/filters:format(webp)/a.jpeg
+images	![x](<https://example.com/a b\\(1\\)\\>.png>)	https://example.com/a b(1)>.png
+images	![x](https://example.com/a\\b\\\\c.png)	https://example.com/a\\b\\c.png
+images-bad	![x](//cdn.example.com/a.png)

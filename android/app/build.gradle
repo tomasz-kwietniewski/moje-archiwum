@@ -1,0 +1,27 @@
+plugins { id 'com.android.application' }
+
+android {
+    namespace 'pl.tomaszkwietniewski.moje_archiwum'
+    compileSdk 35
+
+    defaultConfig {
+        applicationId 'pl.tomaszkwietniewski.moje_archiwum'
+        minSdk 26
+        targetSdk 34
+        versionCode 10
+        versionName '0.3.5'
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+}
+
+android.applicationVariants.all { variant ->
+    if (variant.buildType.name == 'debug') {
+        variant.outputs.all {
+            outputFileName = "MojeArchiwum-Android-v${variant.versionName}-test.apk"
+        }
+    }
+}
