@@ -2,8 +2,12 @@ import {safeTitle,datePrefix,makeMarkdown,validateTopic} from './core.js';
 import {nativeMessage} from './native.js';
 const $=id=>document.getElementById(id);
 let root=null,draft=null,busy=false;
+// The topic of the last saved note is offered again, so a series of notes needs no retyping.
+const LAST_TOPIC='lastTopic';
+let suggested=false;
 const date=new Date();
 const key=new URLSearchParams(location.search).get('draft');
+const TOPIC_HELP='Wybierz z listy albo wpisz nazwę. Nowy folder powstanie przy zapisie.';
 function status(message,error=false) {$('status').textContent=message;$('status').classList.toggle('error',error);}
 function update() {
  $('filename').textContent=datePrefix(date)+'_'+safeTitle($('title').value)+'.md';
@@ -39,9 +43,12 @@ $('choose').addEventListener('click',async()=>{
  }
 });
 $('title').addEventListener('input',update);
-$('topic').addEventListener('input',update);
+$('topic').addEventListener('input',()=>{suggested=false;$('topic-help').textContent=TOPIC_HELP;update();});
+// Selecting the suggested topic lets the next keystroke replace it with another one.
+$('topic').addEventListener('focus',()=>{if(suggested)$('topic').select();});
 $('body').addEventListener('input',update);
 $('new-topic').addEventListener('click',()=>{
+ suggested=false;$('topic-help').textContent=TOPIC_HELP;
  $('topic').value='';$('topic').placeholder='Nazwa nowego tematu';$('topic').focus();update();
  status('Wpisz nazwę nowego tematu. Folder powstanie przy zapisie.');
 });
@@ -62,6 +69,7 @@ async function save(allowMissingImages) {
   const content=makeMarkdown({title:$('title').value,url:draft.url,body:$('body').value,date});
   busy=true;update();$('choose').disabled=true;status('Zapisuję...');
   const saved=await nativeMessage('save',{topic,basename:datePrefix(date)+'_'+safeTitle($('title').value),content,source:draft.url,allowMissingImages});
+  await chrome.storage.local.set({[LAST_TOPIC]:topic}).catch(()=>{});
   const missing=saved.missingImages?.length || 0;
   status('Zapisano: '+saved.root+'\\'+saved.path+(missing ? '. Obrazy niepobrane ('+missing+') zostały linkami internetowymi.' : ''));
   await refreshRoot().catch(()=>{});
@@ -74,6 +82,14 @@ async function save(allowMissingImages) {
 }
 $('form').addEventListener('submit',event=>{event.preventDefault();save(false);});
 $('save-missing').addEventListener('click',()=>save(true));
+async function suggestLastTopic() {
+ const stored=await chrome.storage.local.get(LAST_TOPIC);
+ const topic=stored[LAST_TOPIC];
+ // Only a folder that still exists in the current archive; a deleted one must not come back by itself.
+ if(!topic || ![...$('topics').options].some(option=>option.value===topic))return;
+ $('topic').value=topic;suggested=true;
+ $('topic-help').textContent='Ostatnio użyty temat. Kliknij pole i wpisz inny, żeby zmienić.';
+}
 async function init() {
  await refreshRoot().catch(error=>{status(error.message,true);root=null;});
  const data=key ? await chrome.storage.session.get(key) : {};
@@ -86,6 +102,7 @@ async function init() {
  $('title').value=draft.title;$('body').value=draft.body;
  for(const id of ['title','topic','mode','body']) $(id).disabled=false;
  $('new-topic').disabled=false;
+ await suggestLastTopic().catch(()=>{});
  if(!draft.extracted) status('Nie wykryto osobnego artykułu. Sprawdź treść przed zapisaniem.');
  update();
 }

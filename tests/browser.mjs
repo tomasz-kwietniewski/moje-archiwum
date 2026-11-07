@@ -45,7 +45,12 @@ export async function runAutomated() {
   let editor=context.pages().find(p=>p.url().includes('editor.html'));
   if(!editor)editor=await context.waitForEvent('page');
   await editor.waitForSelector('#title:enabled');
-  assert.equal(await editor.locator('#topic').inputValue(),'','a topic must be chosen for each note');
+  assert.equal(await editor.locator('#topic').inputValue(),'','nothing to suggest before the first save');
+  // The whole editor, with the save button, fits the window without scrolling.
+  const fit=await editor.evaluate(()=>({inner:innerHeight,scroll:document.documentElement.scrollHeight,save:document.getElementById('save').getBoundingClientRect().bottom}));
+  assert.ok(fit.scroll<=fit.inner && fit.save<=fit.inner,'editor fits the window: '+JSON.stringify(fit));
+  const bounds=await editor.evaluate(async()=>(await import(chrome.runtime.getURL('background.js'))).editorBounds());
+  assert.ok(bounds.width===780 && bounds.height>=680 && bounds.height<=900,'editor window bounds: '+JSON.stringify(bounds));
   assert.match(await editor.locator('#title').inputValue(),/Próba archiwum/);
   const body=await editor.locator('#body').inputValue();
   assert.ok(body.includes('zażółć gęślą jaźń'));
@@ -87,9 +92,20 @@ export async function runAutomated() {
   });
   assert.equal(after.length,2);assert.equal(after.find(x=>x.name===first[0].name).text,first[0].text);
   await editor.reload();await editor.waitForSelector('#title:enabled');
+  assert.equal(await editor.locator('#topic').inputValue(),'Energetyka','the last used topic is suggested');
+  assert.match(await editor.locator('#topic-help').textContent(),/Ostatnio użyty temat/);
+  assert.equal(await editor.locator('#save').isEnabled(),true);
+  assert.ok((await editor.locator('#topics option').evaluateAll(options=>options.map(option=>option.value))).includes('Energetyka'));
+  await editor.locator('#topic').focus();
+  assert.deepEqual(await editor.locator('#topic').evaluate(input=>[input.selectionStart,input.selectionEnd]),[0,'Energetyka'.length],'suggested topic is selected for replacing');
+  await editor.locator('#topic').press('B');
+  assert.equal(await editor.locator('#topic').inputValue(),'B');
+  assert.match(await editor.locator('#topic-help').textContent(),/Wybierz z listy/);
+  // A remembered topic whose folder is gone is not suggested, so it is never recreated by accident.
+  await editor.evaluate(()=>chrome.storage.local.set({lastTopic:'Usunięty temat'}));
+  await editor.reload();await editor.waitForSelector('#title:enabled');
   assert.equal(await editor.locator('#topic').inputValue(),'');
   assert.equal(await editor.locator('#save').isDisabled(),true);
-  assert.ok((await editor.locator('#topics option').evaluateAll(options=>options.map(option=>option.value))).includes('Energetyka'));
   await editor.locator('#topic').fill('../escape');await editor.locator('#save').click();
   assert.match(await editor.locator('#status').textContent(),/Nie zapisano/);
   await editor.locator('#topic').fill('Energetyka');
@@ -116,6 +132,7 @@ export async function runAutomated() {
   assert.ok(withLink.includes('![Brak]('+missingImage+')'));
   await editor.screenshot({path:'.test-output/editor.png',fullPage:true});
   await editor.locator('#body').fill('');assert.equal(await editor.locator('#save').isDisabled(),true);
+  assert.equal(await editor.evaluate(async()=>(await chrome.storage.local.get('lastTopic')).lastTopic),'Energetyka','a successful save remembers its topic');
   // Built-in Chrome pages produce a useful error rather than an empty file.
   const errorPagePromise=context.waitForEvent('page');
   await editor.evaluate(async()=>{await(await import(chrome.runtime.getURL('background.js'))).captureTab({id:1,url:'chrome://extensions'});});
@@ -123,7 +140,7 @@ export async function runAutomated() {
   await errorPage.waitForFunction(()=>document.getElementById('status')?.textContent.includes('Otwórz artykuł'));
   assert.equal(await errorPage.locator('#save').isDisabled(),true);
   assert.deepEqual(errors,[]);
-  console.log('PASS: extension capture, Polish, table, relative links, srcset, UI save, no overwrite, explicit topic selection and creation, traversal rejection, empty content, restricted page.');
+  console.log('PASS: extension capture, Polish, table, relative links, srcset, UI save, no overwrite, last topic suggested (not when its folder is gone), editor fits the window, topic creation, traversal rejection, empty content, restricted page.');
   console.log('Browser UI uses an OPFS native host shim. Windows host and Brave integration have separate tests.');
  } finally {await env.close();}
 }

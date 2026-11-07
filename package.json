@@ -1,13 +1,13 @@
 {
   "name": "moje-archiwum",
-  "version": "0.4.4",
+  "version": "0.4.6",
   "private": true,
   "type": "module",
   "scripts": {
     "build": "node scripts/build.mjs",
     "build:android-assets": "node scripts/build-android-assets.mjs",
     "test": "node --test tests/*.test.mjs",
-    "test:e2e": "node tests/browser.mjs && node tests/lead-image.mjs && node tests/icons.mjs",
+    "test:e2e": "node tests/browser.mjs && node tests/lead-image.mjs && node tests/job-offer-page.mjs && node tests/icons.mjs",
     "test:android-asset": "node tests/android-asset.mjs",
     "test:native": "node tests/native-host.mjs && node tests/native-rules.mjs",
     "test:brave": "node tests/brave.mjs",

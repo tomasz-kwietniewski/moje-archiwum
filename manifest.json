@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Moje archiwum - Markdown",
-  "version": "0.4.4",
+  "version": "0.4.6",
   "description": "Zapisz czytaną stronę jako plik Markdown z obrazami offline.",
   "permissions": [
     "activeTab",

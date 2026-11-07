@@ -1,6 +1,7 @@
 import { Readability } from '@mozilla/readability';
 import TurndownService from 'turndown';
 import { gfm } from 'turndown-plugin-gfm';
+import { jobOfferBlock } from './job-offer.js';
 
 globalThis.__captureMarkdownPage = () => {
  if(!/^https?:$/.test(location.protocol)) throw new Error('Otwórz zwykłą stronę internetową (HTTP lub HTTPS).');
@@ -44,7 +45,7 @@ globalThis.__captureMarkdownPage = () => {
  converter.remove(['script','style','noscript','iframe','form']);
  const article=new Readability(clone.cloneNode(true),{charThreshold:120}).parse();
  const main=clone.querySelector('main,[role="main"],article') || clone.body;
- const full=converter.turndown(clone.body?.innerHTML || '').trim();
+ let full=converter.turndown(clone.body?.innerHTML || '').trim();
  let body=converter.turndown(article?.content || main?.innerHTML || '').trim();
  // Some publishers place the lead photo beside the article rather than inside it.
  const lead=[...clone.querySelectorAll('figure[class*="main-image" i] img, figure[class*="hero" i] img, figure[class*="lead" i] img, figure[class*="featured" i] img')]
@@ -53,6 +54,12 @@ globalThis.__captureMarkdownPage = () => {
  if(leadSrc && !body.includes(leadSrc)) {
   const leadMarkdown=converter.turndown(lead.outerHTML).trim();
   if(leadMarkdown) body=leadMarkdown+'\n\n'+body;
+ }
+ // Read from the live document: the clone has lost its scripts, and with them the JobPosting data.
+ const offer=jobOfferBlock(document);
+ if(offer) {
+  body=offer+'\n\n'+body;
+  full=offer+'\n\n'+full;
  }
  if(body.length+full.length>2500000) throw new Error('Ta strona jest zbyt duża. Wybierz krótszą podstronę.');
  if(!body && !full) throw new Error('Na tej stronie nie znaleziono treści do zapisania.');

@@ -415,8 +415,8 @@
             if (href) {
               if (href.indexOf("javascript:") === 0) {
                 if (link.childNodes.length === 1 && link.childNodes[0].nodeType === this.TEXT_NODE) {
-                  var text = this._doc.createTextNode(link.textContent);
-                  link.parentNode.replaceChild(text, link);
+                  var text2 = this._doc.createTextNode(link.textContent);
+                  link.parentNode.replaceChild(text2, link);
                 } else {
                   var container = this._doc.createElement("span");
                   while (link.firstChild) {
@@ -2416,15 +2416,15 @@
     var node = next(prev, element, isPre);
     while (node !== element) {
       if (node.nodeType === 3 || node.nodeType === 4) {
-        var text = node.data.replace(/[ \r\n\t]+/g, " ");
-        if ((!prevText || / $/.test(prevText.data)) && !keepLeadingWs && text[0] === " ") {
-          text = text.substr(1);
+        var text2 = node.data.replace(/[ \r\n\t]+/g, " ");
+        if ((!prevText || / $/.test(prevText.data)) && !keepLeadingWs && text2[0] === " ") {
+          text2 = text2.substr(1);
         }
-        if (!text) {
+        if (!text2) {
           node = remove(node);
           continue;
         }
-        node.data = text;
+        node.data = text2;
         prevText = node;
       } else if (node.nodeType === 1) {
         if (isBlock2(node) || node.nodeName === "BR") {
@@ -2859,6 +2859,108 @@
     ]);
   }
 
+  // src/job-offer.js
+  var TIME_ZONE = "Europe/Warsaw";
+  var MAX_VALUE = 300;
+  var PERIODS = { HOUR: "godz.", DAY: "dzie\u0144", WEEK: "tydz.", MONTH: "mies.", YEAR: "rok" };
+  function plain(value) {
+    if (value === null || value === void 0) return "";
+    return String(value).replace(/[–—−]/g, "-").replace(/\s+/g, " ").trim().slice(0, MAX_VALUE).replace(/[\\`[\]<>]/g, "\\$&");
+  }
+  function text(element) {
+    return element ? String(element.innerText ?? element.textContent ?? "") : "";
+  }
+  function isJobPosting(item) {
+    const type = item?.["@type"];
+    return (Array.isArray(type) ? type : [type]).includes("JobPosting");
+  }
+  function searchPostings(item) {
+    if (Array.isArray(item)) return item.map(searchPostings).find(Boolean) || null;
+    if (!item || typeof item !== "object") return null;
+    if (isJobPosting(item)) return item;
+    return searchPostings(item["@graph"]);
+  }
+  function findJobPosting(doc) {
+    for (const script of doc.querySelectorAll('script[type="application/ld+json"]')) {
+      try {
+        const found = searchPostings(JSON.parse(script.textContent));
+        if (found) return found;
+      } catch {
+      }
+    }
+    return null;
+  }
+  function localDate(value, timeZone = TIME_ZONE) {
+    if (!value) return "";
+    const date = new Date(value);
+    if (Number.isNaN(date.getTime())) return "";
+    const parts = new Intl.DateTimeFormat("en-CA", { timeZone, year: "numeric", month: "2-digit", day: "2-digit" }).formatToParts(date);
+    const part = (type) => parts.find((entry) => entry.type === type).value;
+    return part("year") + "-" + part("month") + "-" + part("day");
+  }
+  function salaryFromPosting(posting) {
+    const base = posting?.baseSalary;
+    if (!base || typeof base !== "object") return "";
+    const amount = base.value && typeof base.value === "object" ? base.value : base;
+    const positive = (number) => Number.isFinite(Number(number)) && Number(number) > 0 ? Number(number) : 0;
+    const min = positive(amount.minValue);
+    const max = positive(amount.maxValue) || positive(typeof amount.value === "object" ? 0 : amount.value);
+    if (!min && !max) return "";
+    const range = min && max && min !== max ? min + "-" + max : String(max || min);
+    const period = PERIODS[String(amount.unitText || base.unitText || "").toUpperCase()];
+    return [range, base.currency, period ? "/ " + period : ""].filter(Boolean).join(" ");
+  }
+  function placeFromPosting(posting) {
+    const location2 = Array.isArray(posting?.jobLocation) ? posting.jobLocation[0] : posting?.jobLocation;
+    const address = location2?.address;
+    if (!address || typeof address !== "object") return "";
+    return [address.streetAddress, address.addressLocality].filter(Boolean).join(", ");
+  }
+  function contractFromPosting(posting) {
+    const type = posting?.employmentType;
+    return Array.isArray(type) ? type.join(", ") : type;
+  }
+  function organizationName(posting) {
+    const organization = posting?.hiringOrganization;
+    return typeof organization === "string" ? organization : organization?.name;
+  }
+  function remoteFromPosting(posting) {
+    return posting?.jobLocationType === "TELECOMMUTE" ? "praca zdalna" : "";
+  }
+  function pracujHeader(doc) {
+    const badge = (selector) => {
+      const element = doc.querySelector("[data-test" + selector + "]");
+      return text(element?.querySelector('[data-test="offer-badge-title"]') || element);
+    };
+    const salaries = [...doc.querySelectorAll('[data-test="section-salaryPerContractType"]')].map((element) => plain(text(element))).filter(Boolean);
+    return {
+      salary: salaries.join("; ") || plain(text(doc.querySelector('[data-test="section-salary"]'))),
+      contract: badge('="sections-benefit-contracts"'),
+      // The workplace badge has the region on a second line.
+      place: badge('="sections-benefit-workplaces"').split("\n")[0],
+      schedule: badge('="sections-benefit-work-schedule"'),
+      level: badge('="sections-benefit-employment-type-name"'),
+      mode: badge('^="sections-benefit-work-modes"')
+    };
+  }
+  function jobOfferBlock(doc) {
+    const posting = findJobPosting(doc);
+    const header = pracujHeader(doc);
+    const rows = [
+      ["Firma", organizationName(posting)],
+      ["Wynagrodzenie", header.salary || salaryFromPosting(posting)],
+      ["Umowa", contractFromPosting(posting) || header.contract],
+      ["Etat", header.schedule],
+      ["Poziom", header.level],
+      ["Tryb", header.mode || remoteFromPosting(posting)],
+      ["Miejsce", placeFromPosting(posting) || header.place],
+      ["Opublikowana", localDate(posting?.datePosted)],
+      ["Wa\u017Cna do", localDate(posting?.validThrough)]
+    ].map(([label, value]) => [label, plain(value)]).filter(([, value]) => value);
+    if (!rows.some(([label]) => label !== "Firma")) return "";
+    return "## Dane oferty\n\n" + rows.map(([label, value]) => "- " + label + ": " + value).join("\n");
+  }
+
   // src/capture.js
   globalThis.__captureMarkdownPage = () => {
     if (!/^https?:$/.test(location.protocol)) throw new Error("Otw\xF3rz zwyk\u0142\u0105 stron\u0119 internetow\u0105 (HTTP lub HTTPS).");
@@ -2906,7 +3008,7 @@
     converter.remove(["script", "style", "noscript", "iframe", "form"]);
     const article = new import_readability.Readability(clone.cloneNode(true), { charThreshold: 120 }).parse();
     const main = clone.querySelector('main,[role="main"],article') || clone.body;
-    const full = converter.turndown(clone.body?.innerHTML || "").trim();
+    let full = converter.turndown(clone.body?.innerHTML || "").trim();
     let body = converter.turndown(article?.content || main?.innerHTML || "").trim();
     const lead = [...clone.querySelectorAll('figure[class*="main-image" i] img, figure[class*="hero" i] img, figure[class*="lead" i] img, figure[class*="featured" i] img')].find((img) => !img.closest("aside,nav,footer"));
     const leadSrc = lead?.getAttribute("src") || "";
@@ -2914,9 +3016,14 @@
       const leadMarkdown = converter.turndown(lead.outerHTML).trim();
       if (leadMarkdown) body = leadMarkdown + "\n\n" + body;
     }
+    const offer = jobOfferBlock(document);
+    if (offer) {
+      body = offer + "\n\n" + body;
+      full = offer + "\n\n" + full;
+    }
     if (body.length + full.length > 25e5) throw new Error("Ta strona jest zbyt du\u017Ca. Wybierz kr\xF3tsz\u0105 podstron\u0119.");
     if (!body && !full) throw new Error("Na tej stronie nie znaleziono tre\u015Bci do zapisania.");
-    const clean = (text) => text.replace(/\u00ad/g, "");
+    const clean = (text2) => text2.replace(/\u00ad/g, "");
     return { title: clean(article?.title || document.title || location.hostname), url: location.href, body: clean(body), full: clean(full), extracted: Boolean(article), capturedAt: (/* @__PURE__ */ new Date()).toISOString() };
   };
 })();
